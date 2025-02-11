@@ -17,7 +17,7 @@ namespace DapperEjerciciosPractice.Repositories
         {
             using var connection = GetConnection();
 
-            var videoGame = await connection.QueryAsync<VideoGame>("Select * fron VideoGames");
+            var videoGame = await connection.QueryAsync<VideoGame>("Select * from VideoGames");
 
             return videoGame.ToList();
         }
