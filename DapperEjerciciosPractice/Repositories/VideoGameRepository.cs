@@ -13,14 +13,23 @@ namespace DapperEjerciciosPractice.Repositories
             _configuration = configuration;
         }
 
-        public Task AddAsync(VideoGame videoGame)
+        public async Task AddAsync(VideoGame videoGame)
         {
-            throw new NotImplementedException();
+            using var connection = GetConnection();
+
+            var query = "Insert into VideoGames (Title, Publisher, Developer, Platform, ReleaseDate) values (@Title, @Publisher, @Developer, @Platform, @ReleaseDate); SELECT CAST(SCOPE_IDENTITY() AS  int);" ;
+
+            int newId = await connection.QuerySingleAsync<int>(query, videoGame);
+
+            videoGame.Id = newId;
+           
         }
 
-        public Task DeleteAsync(int id)
+        public async Task DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            using var connection = GetConnection();
+
+            await connection.ExecuteAsync("Delete from VideoGames where Id = @Id", new { Id = id });
         }
 
         public async Task<List<VideoGame>> GetAllAsync()
@@ -45,9 +54,12 @@ namespace DapperEjerciciosPractice.Repositories
             }
         }
 
-        public Task UpdateAsync(VideoGame videoGame)
+        public async Task UpdateAsync(VideoGame videoGame)
         {
-            throw new NotImplementedException();
+            using var connection = GetConnection();
+
+            await connection
+                .ExecuteAsync("Update VideoGames set Title = @Title, Publisher = @Publisher, Developer = @Developer, Platform = @Platform, ReleaseDate = @ReleaseDate where Id = @Id", videoGame);
         }
 
         private SqlConnection GetConnection()

@@ -24,7 +24,7 @@ namespace DapperEjerciciosPractice.Controllers
             return Ok(videoGames);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}", Name ="GetById")]
         public async Task<ActionResult<VideoGame>> GetByIdAsync(int id)
         {
             var videoGame = await _videoGameRepository.GetByIdAsync(id);
@@ -35,6 +35,42 @@ namespace DapperEjerciciosPractice.Controllers
             }
 
             return Ok(videoGame);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> AddAsync(VideoGame videoGame)
+        {
+            await _videoGameRepository.AddAsync(videoGame);
+            return CreatedAtAction("GetById", new { id = videoGame.Id }, videoGame);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult> UpdateAsync(int id, VideoGame videoGame)
+        {
+            var existingGame = await _videoGameRepository.GetByIdAsync(id);
+
+            if (existingGame == null)
+            {
+                return NotFound("VideoGame not found");
+            }
+
+            videoGame.Id = id;
+
+            await _videoGameRepository.UpdateAsync(videoGame);
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+
+        public async Task<ActionResult> DeleteAsync(int id)
+        {
+            var existingGame = await _videoGameRepository.GetByIdAsync(id);
+            if (existingGame == null)
+            {
+                return NotFound("VideoGame not found");
+            }
+            await _videoGameRepository.DeleteAsync(id);
+            return NoContent();
         }
     }
 }
