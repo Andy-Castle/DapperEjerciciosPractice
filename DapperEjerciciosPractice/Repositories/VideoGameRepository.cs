@@ -1,4 +1,5 @@
-﻿using DapperEjerciciosPractice.Models;
+﻿using Dapper;
+using DapperEjerciciosPractice.Models;
 using Microsoft.Data.SqlClient;
 
 namespace DapperEjerciciosPractice.Repositories
@@ -12,9 +13,13 @@ namespace DapperEjerciciosPractice.Repositories
             _configuration = configuration;
         }
 
-        public Task<List<VideoGame>> GetAllAsync()
+        public async Task<List<VideoGame>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            using var connection = GetConnection();
+
+            var videoGame = await connection.QueryAsync<VideoGame>("Select * fron VideoGames");
+
+            return videoGame.ToList();
         }
 
         private SqlConnection GetConnection()
