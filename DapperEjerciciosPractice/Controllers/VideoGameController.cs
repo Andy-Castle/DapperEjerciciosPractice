@@ -23,5 +23,18 @@ namespace DapperEjerciciosPractice.Controllers
 
             return Ok(videoGames);
         }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<VideoGame>> GetByIdAsync(int id)
+        {
+            var videoGame = await _videoGameRepository.GetByIdAsync(id);
+
+            if (videoGame == null)
+            {
+                return NotFound("Este videojuego no existe");
+            }
+
+            return Ok(videoGame);
+        }
     }
 }
